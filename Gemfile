@@ -8,7 +8,6 @@ gem 'puma'
 gem 'rails_12factor'
 gem 'mysql2'
 
-
 group :development, :test do
   gem 'rspec-rails'
   gem 'pry'
