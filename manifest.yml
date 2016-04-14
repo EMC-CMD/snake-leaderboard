@@ -1,0 +1,9 @@
+---
+applications:
+- name: status-monitor-elm
+  memory: 1024M
+  instances: 1
+  path: .
+  command: bundle exec rake db:migrate db:seed && bundle exec rails s Puma -p $PORT
+  services:
+    - mysql
