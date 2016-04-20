@@ -14,7 +14,7 @@ class LeadersController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        leaders = Leader.order('score DESC').limit(10).map do |leader|
+        leaders = Leader.validate_and_get_top_ten.map do |leader|
           { twitter_handle: leader.twitter_handle, score: leader.score }
         end
         render json: leaders

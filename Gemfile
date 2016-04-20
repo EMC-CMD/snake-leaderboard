@@ -7,10 +7,12 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'puma'
 gem 'rails_12factor'
 gem 'mysql2'
+gem 'twitter'
 
 group :development, :test do
   gem 'rspec-rails'
   gem 'pry'
+  gem 'pry-rails'
 end
 
 group :development do

@@ -16,7 +16,7 @@ RSpec.describe LeadersController, type: :controller do
   it 'gets top 10 existing leaders' do
     Leader.delete_all
     leaders = (1..11).map do |i|
-      Leader.create(twitter_handle: 'someone'+i.to_s, score: i)
+      Leader.create(twitter_handle: 'someone'+i.to_s, score: i, validated: true)
     end
     get :index, format: :json
     result = JSON.parse(response.body)
