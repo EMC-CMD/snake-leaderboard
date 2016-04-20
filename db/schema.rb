@@ -11,14 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160414141627) do
+ActiveRecord::Schema.define(version: 20160420210417) do
 
   create_table "leaders", force: :cascade do |t|
     t.string   "twitter_handle", limit: 255
     t.integer  "score",          limit: 4
-    t.boolean  "validated",                  default: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.string   "validated",      limit: 255, default: "0"
   end
 
 end
