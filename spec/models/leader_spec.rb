@@ -21,34 +21,25 @@ RSpec.describe Leader, type: :model do
       Leader.create(twitter_handle: "user10", score: 10, validated: false)
     end
 
-    it 'gets top ten, skipping users that haven\'t been validated' do
+    it 'doesn\'t mark validated=true for users that are not valid' do
       allow(leaderboard_validator).to receive(:should_be_on_leaderboard?).with('user10').and_return(false)
-      leaders = Leader.validate_and_get_top_ten
-      expect(leaders).to_not include(leader10)
-      expect(leaders.size).to eql(9)
+      Leader.validate_all
+      expect(leader10.reload.validated?).to eql(false)
     end
 
     it 'validates records that haven\'t been validated' do
       allow(leaderboard_validator).to receive(:should_be_on_leaderboard?).with('user10').and_return(true)
-      expect(Leader.validate_and_get_top_ten).to include(leader10)
+      Leader.validate_all
       expect(leader10.reload.validated?).to eql(true)
     end
   end
 
-  context 'when there are no users' do
-    it 'should return an empty list' do
-      expect(Leader.validate_and_get_top_ten).to be_empty
-    end
-  end
-
-  context 'when there are no valid users' do
-    before do
-      Leader.create(twitter_handle: 'xhe', score: 100000, validated: false)
+  context 'when there is an unvalidated leader older than 10 minutes' do
+    it 'should delete the user' do
+      xhe = Leader.create(twitter_handle: 'xhe', score: -32, validated: false, created_at: Time.now - 20.minutes)
       allow(leaderboard_validator).to receive(:should_be_on_leaderboard?).with('xhe').and_return(false)
-    end
-
-    it 'should return an empty list' do
-      expect(Leader.validate_and_get_top_ten).to be_empty
+      Leader.validate_all
+      expect { xhe.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end
