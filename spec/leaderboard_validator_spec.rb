@@ -13,28 +13,28 @@ RSpec.describe LeaderboardValidator do
 
   it 'validates that a user should be shown on the leaderboard' do
     allow(client).to receive(:friendship?).with('mock', 'EmcDojo').and_return(true)
-    allow(client).to receive(:search).with('from:mock #CFDojo', result_type: 'recent').and_return(['anything'])
+    allow(client).to receive(:search).with('from:mock #dojosnake', result_type: 'recent').and_return(['anything'])
 
     expect(leaderboard_validator.should_be_on_leaderboard?('mock')).to eql(true)
   end
 
   it 'validates another user should be shown on the leaderboard' do
     allow(client).to receive(:friendship?).with('mock2', 'EmcDojo').and_return(true)
-    allow(client).to receive(:search).with('from:mock2 #CFDojo', result_type: 'recent').and_return(['anything2'])
+    allow(client).to receive(:search).with('from:mock2 #dojosnake', result_type: 'recent').and_return(['anything2'])
 
     expect(leaderboard_validator.should_be_on_leaderboard?('mock2')).to eql(true)
   end
 
   it 'returns false when the user is not following EmcDojo' do
     allow(client).to receive(:friendship?).with('mock2', 'EmcDojo').and_return(false)
-    allow(client).to receive(:search).with('from:mock2 #CFDojo', result_type: 'recent').and_return(['anything2'])
+    allow(client).to receive(:search).with('from:mock2 #dojosnake', result_type: 'recent').and_return(['anything2'])
 
     expect(leaderboard_validator.should_be_on_leaderboard?('mock2')).to eql(false)
   end
 
-  it 'returns false when the user did not tweet #CFDojo' do
+  it 'returns false when the user did not tweet #dojosnake' do
     allow(client).to receive(:friendship?).with('mock2', 'EmcDojo').and_return(true)
-    allow(client).to receive(:search).with('from:mock2 #CFDojo', result_type: 'recent').and_return([])
+    allow(client).to receive(:search).with('from:mock2 #dojosnake', result_type: 'recent').and_return([])
 
     expect(leaderboard_validator.should_be_on_leaderboard?('mock2')).to eql(false)
   end
