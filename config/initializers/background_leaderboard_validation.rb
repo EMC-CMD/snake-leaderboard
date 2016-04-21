@@ -4,6 +4,6 @@ Thread.new do
   puts "Validating leaders"
   while true do
     Leader.validate_all
-    sleep(3.minutes)
+    sleep(1.minute)
   end
 end

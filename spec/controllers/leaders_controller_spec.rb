@@ -13,6 +13,30 @@ RSpec.describe LeadersController, type: :controller do
     expect(Leader.where(twitter_handle: twitter_handle, score: 10)).to be_present
   end
 
+  it 'updates existing leaders\' scores instead of creating new ones when the leader already exists' do
+    Leader.create(twitter_handle: 'xhe', score: 0)
+    post :create,
+         token: '4505d16a-230b-4832-b521-93499f696bb3',
+         leader: {
+           twitter_handle: 'xhe',
+           score: 10
+         }
+    expect(Leader.where(twitter_handle: 'xhe', score: 10)).to be_present
+    expect(Leader.where(twitter_handle: 'xhe').size).to eql(1)
+  end
+
+  it 'validates when you get the validate endpoint' do
+    allow(Leader).to receive(:validate_all)
+    get :validate, token: '2e326efa-268a-4117-9e40-517679356a35'
+    expect(Leader).to have_received(:validate_all)
+  end
+
+  it 'does not validate when you get the validate endpoint with an invalid token' do
+    allow(Leader).to receive(:validate_all)
+    get :validate, token: 'invalid'
+    expect(Leader).to_not have_received(:validate_all)
+  end
+
   it 'gets top 10 existing leaders' do
     Leader.delete_all
     leaders = (1..11).map do |i|

@@ -13,8 +13,8 @@ class LeaderboardValidator
   end
 
   def did_tweet?(username)
-    search_result = client.search("from:#{username} #dojosnake", result_type: "recent") # ['anything']
-    !search_result.first.nil? # true
+    search_result = client.search("from:#{username} #dojosnake", result_type: "recent")
+    !search_result.first.nil?
   end
 
   def did_follow?(username)
