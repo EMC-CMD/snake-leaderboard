@@ -1,8 +1,9 @@
 class Leader < ActiveRecord::Base
   WINDOWS = [
-    Time.local(2016, 5, 2, 18, 0, 0)..Time.local(2016, 5, 2, 20, 59, 59),
-    Time.local(2016, 5, 2, 21, 0, 0)..Time.local(2016, 5, 3, 16, 59, 59),
-    Time.local(2016, 5, 3, 17, 0, 0)..Time.local(2016, 5, 4, 16, 59, 59)
+    Time.zone.local(2016, 4, 26, 0, 0, 0)..Time.zone.local(2016, 5, 2, 17, 59, 59),
+    Time.zone.local(2016, 5, 2, 18, 0, 0)..Time.zone.local(2016, 5, 2, 20, 59, 59),
+    Time.zone.local(2016, 5, 2, 21, 0, 0)..Time.zone.local(2016, 5, 3, 16, 59, 59),
+    Time.zone.local(2016, 5, 3, 17, 0, 0)..Time.zone.local(2016, 5, 4, 16, 59, 59)
   ]
   def self.validate_all
     Leader.where(validated: false).each do |leader|
@@ -23,7 +24,7 @@ class Leader < ActiveRecord::Base
   end
 
   def self.target_range
-    WINDOWS.find {|w| w.include? Time.now }
+    WINDOWS.find {|w| w.begin <= Time.zone.now && Time.zone.now < w.end }
   end
 
   def self.put(attributes)

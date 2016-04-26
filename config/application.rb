@@ -12,6 +12,7 @@ module StatusMonitor
       g.view_specs false
     end
 
+    config.time_zone = "Pacific Time (US & Canada)"
     config.active_record.raise_in_transactional_callbacks = true
   end
 end

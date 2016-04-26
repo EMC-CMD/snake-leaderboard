@@ -44,7 +44,7 @@ RSpec.describe Leader, type: :model do
   end
 
   it 'should not update your score if its lower than a previous score' do
-    Timecop.travel(Time.local(2016, 5, 2, 18, 0, 0)) do
+    Timecop.travel(Time.zone.local(2016, 5, 2, 18, 0, 0)) do
       l1 = Leader.put(twitter_handle: 'l1', score: 23, validated: true)
       l2 = Leader.put(twitter_handle: 'l1', score: 10)
 
@@ -53,40 +53,40 @@ RSpec.describe Leader, type: :model do
   end
 
   it 'should create a new record instead of updating the existing one when in a different range' do
-    Timecop.travel(Time.local(2016, 5, 2, 18, 0, 0)) do
+    Timecop.travel(Time.zone.local(2016, 5, 2, 18, 0, 0)) do
       l1 = Leader.put(twitter_handle: 'l1', score: 23, validated: true)
       l2 = Leader.put(twitter_handle: 'l1', score: 35)
       expect(Leader.current_leaders.to_a).to eql([l2])
     end
 
-    Timecop.travel(Time.local(2016, 5, 2, 21, 0, 0)) do
+    Timecop.travel(Time.zone.local(2016, 5, 2, 21, 0, 0)) do
       l3 = Leader.put(twitter_handle: 'l1', score: 25, validated: true)
       expect(Leader.current_leaders.to_a).to eql([l3])
     end
   end
 
   it 'should only show leaders from the current time window' do
-    Timecop.travel(Time.local(2016, 5, 1, 17, 0, 0)) do
+    Timecop.travel(Time.zone.local(2016, 5, 1, 17, 0, 0)) do
       l1 = Leader.create(twitter_handle: 'l1', score: 23, validated: true)
-      expect(Leader.current_leaders).to be_empty
+      expect(Leader.current_leaders.to_a).to eql([l1])
     end
 
-    Timecop.travel(Time.local(2016, 5, 2, 18, 0, 0)) do
+    Timecop.travel(Time.zone.local(2016, 5, 2, 18, 0, 0)) do
       l2 = Leader.create(twitter_handle: 'l2', score: 23, validated: true)
       expect(Leader.current_leaders.to_a).to eql([l2])
     end
 
-    Timecop.travel(Time.local(2016, 5, 2, 21, 0, 0)) do
+    Timecop.travel(Time.zone.local(2016, 5, 2, 21, 0, 0)) do
       l3 = Leader.create(twitter_handle: 'l3', score: 23, validated: true)
       expect(Leader.current_leaders.to_a).to eql([l3])
     end
 
-    Timecop.travel(Time.local(2016, 5, 3, 17, 0, 0)) do
+    Timecop.travel(Time.zone.local(2016, 5, 3, 17, 0, 0)) do
       l4 = Leader.create(twitter_handle: 'l4', score: 23, validated: true)
       expect(Leader.current_leaders.to_a).to eql([l4])
     end
 
-    Timecop.travel(Time.local(2016, 5, 4, 17, 0, 0)) do
+    Timecop.travel(Time.zone.local(2016, 5, 4, 17, 0, 0)) do
       l5 = Leader.create(twitter_handle: 'l5', score: 23, validated: true)
       expect(Leader.current_leaders).to be_empty
     end

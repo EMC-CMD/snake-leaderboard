@@ -39,7 +39,7 @@ RSpec.describe LeadersController, type: :controller do
 
   it 'gets top 10 existing leaders' do
     Leader.delete_all
-    Timecop.travel(Time.local(2016, 5, 2, 18, 0, 0)) do
+    Timecop.travel(Time.zone.local(2016, 5, 2, 18, 0, 0)) do
       leaders = (1..11).map do |i|
         Leader.create(twitter_handle: 'someone'+i.to_s, score: i, validated: true)
       end
