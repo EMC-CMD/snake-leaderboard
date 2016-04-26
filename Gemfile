@@ -13,6 +13,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'pry'
   gem 'pry-rails'
+  gem 'timecop'
 end
 
 group :development do

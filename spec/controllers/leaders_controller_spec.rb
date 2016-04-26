@@ -14,15 +14,15 @@ RSpec.describe LeadersController, type: :controller do
   end
 
   it 'updates existing leaders\' scores instead of creating new ones when the leader already exists' do
-    Leader.create(twitter_handle: 'xhe', score: 0)
+    allow(Leader).to receive(:put)
     post :create,
          token: '4505d16a-230b-4832-b521-93499f696bb3',
          leader: {
            twitter_handle: 'xhe',
            score: 10
          }
-    expect(Leader.where(twitter_handle: 'xhe', score: 10)).to be_present
-    expect(Leader.where(twitter_handle: 'xhe').size).to eql(1)
+
+    expect(Leader).to have_received(:put).with(twitter_handle: 'xhe', score: "10")
   end
 
   it 'validates when you get the validate endpoint' do
@@ -39,16 +39,18 @@ RSpec.describe LeadersController, type: :controller do
 
   it 'gets top 10 existing leaders' do
     Leader.delete_all
-    leaders = (1..11).map do |i|
-      Leader.create(twitter_handle: 'someone'+i.to_s, score: i, validated: true)
-    end
-    get :index, format: :json
-    result = JSON.parse(response.body)
-    expect(result.size).to eql(10)
-    expect(result).to eql(
-      leaders.sort_by(&:score).reverse.take(10).map do |l|
-        {'twitter_handle' => l.twitter_handle, 'score' => l.score}
+    Timecop.travel(Time.local(2016, 5, 2, 18, 0, 0)) do
+      leaders = (1..11).map do |i|
+        Leader.create(twitter_handle: 'someone'+i.to_s, score: i, validated: true)
       end
-    )
+      get :index, format: :json
+      result = JSON.parse(response.body)
+      expect(result.size).to eql(10)
+      expect(result).to eql(
+        leaders.sort_by(&:score).reverse.take(10).map do |l|
+          {'twitter_handle' => l.twitter_handle, 'score' => l.score}
+        end
+      )
+    end
   end
 end

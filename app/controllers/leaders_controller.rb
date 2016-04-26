@@ -6,9 +6,7 @@ class LeadersController < ApplicationController
     end
     leader_param = params.require(:leader)
 
-    Leader.where(twitter_handle: leader_param[:twitter_handle])
-      .first_or_create
-      .update_attributes(score: leader_param[:score])
+    Leader.put(twitter_handle: leader_param[:twitter_handle], score: leader_param[:score])
 
     render nothing: true
   end
@@ -24,7 +22,7 @@ class LeadersController < ApplicationController
         if params[:show_all]
           render json: Leader.all.map(&:attributes)
         else
-          leaders = Leader.where(validated: true).order('score DESC').limit(10).map do |leader|
+          leaders = Leader.current_leaders.map do |leader|
             { twitter_handle: leader.twitter_handle, score: leader.score }
           end
           render json: leaders
