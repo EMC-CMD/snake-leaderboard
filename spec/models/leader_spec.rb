@@ -8,6 +8,13 @@ RSpec.describe Leader, type: :model do
   end
 
   let(:leaderboard_validator) { double }
+  context 'get leader by specific time' do
+    Timecop.travel(Time.zone.local(2016, 5, 3, 17, 0, 0)) do
+      l1 = Leader.put(twitter_handle: 'l1', score: 23, validated: true)
+      expect(Leader.leaders_by_specific_time(2016, 5, 3, 17, 0, 0).to_a).to eql([l1])
+      expect(Leader.leaders_by_specific_time(2016, 5, 3, 16, 59, 59).to_a).to eql([])
+    end
+  end
 
   context 'when there are 10 players' do
     before do

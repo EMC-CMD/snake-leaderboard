@@ -16,6 +16,23 @@ class LeadersController < ApplicationController
     render nothing: true
   end
 
+  def leaders_by_time
+    unless params[:token] == '4505d16a-230b-4832-b521-93499f696bb3'
+      render text: params.inspect, status: :unauthorized
+      return
+    end
+
+    leaders = Leader.leaders_by_specific_time(
+      params[:year],
+      params[:month],
+      params[:day],
+      params[:minute],
+      params[:second]
+    )
+
+    render json: leaders
+  end
+
   def index
     respond_to do |format|
       format.json do

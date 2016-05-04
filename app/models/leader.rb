@@ -23,6 +23,15 @@ class Leader < ActiveRecord::Base
       .limit(10)
   end
 
+  def self.leaders_by_specific_time(year, month, day, time, minute, second)
+    specific_time = Time.zone.local(year, month, day, time, minute, second)
+    tr = WINDOWS.find { |w| w.begin <= specific_time && specific_time <= w.end}
+    self.where(validated: true)
+        .where(created_at: tr)
+        .order('score DESC')
+        .limit(10)
+  end
+
   def self.target_range
     WINDOWS.find {|w| w.begin <= Time.zone.now && Time.zone.now < w.end }
   end
