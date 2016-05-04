@@ -26,6 +26,7 @@ class LeadersController < ApplicationController
       params[:year],
       params[:month],
       params[:day],
+      params[:hour],
       params[:minute],
       params[:second]
     )
