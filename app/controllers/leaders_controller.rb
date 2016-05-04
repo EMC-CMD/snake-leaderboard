@@ -33,6 +33,20 @@ class LeadersController < ApplicationController
     render json: leaders
   end
 
+  def override_validation
+    unless params[:token] == '4505d16a-230b-4832-b521-93499f696bb3'
+      render text: params.inspect, status: :unauthorized
+      return
+    end
+
+    Leader.where(twitter_handle: params[:twitter_handle]).each do |leader|
+      leader.validated = true
+      leader.save
+    end
+
+    render nothing: true
+  end
+
   def index
     respond_to do |format|
       format.json do
