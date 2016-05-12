@@ -23,6 +23,12 @@ class Leader < ActiveRecord::Base
       .limit(10)
   end
 
+  def self.all_leaders
+    self.where(validated: true)
+        .order('score DESC')
+        .limit(10)
+  end
+
   def self.leaders_by_specific_time(year, month, day, hour, minute, second)
     specific_time = Time.zone.local(year, month, day, hour, minute, second)
     tr = WINDOWS.find { |w| w.begin <= specific_time && specific_time <= w.end}
@@ -37,7 +43,7 @@ class Leader < ActiveRecord::Base
   end
 
   def self.put(attributes)
-    where(twitter_handle: attributes[:twitter_handle], created_at: target_range)
+    where(twitter_handle: attributes[:twitter_handle])
     .first_or_create.tap do |leader|
       leader.update_attributes(attributes) unless leader.score.to_i > attributes[:score].to_i
     end

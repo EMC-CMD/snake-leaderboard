@@ -54,7 +54,7 @@ class LeadersController < ApplicationController
         if params[:show_all]
           render json: Leader.all.map(&:attributes)
         else
-          leaders = Leader.current_leaders.map do |leader|
+          leaders = Leader.all_leaders.map do |leader|
             { twitter_handle: leader.twitter_handle, score: leader.score }
           end
           render json: leaders

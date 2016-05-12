@@ -9,7 +9,7 @@ class LeaderboardValidator
   end
 
   def should_be_on_leaderboard?(username)
-    did_tweet?(username) && did_follow?(username)
+    handle?(username)
   end
 
   def did_tweet?(username)
@@ -19,5 +19,9 @@ class LeaderboardValidator
 
   def did_follow?(username)
     client.friendship?(username, 'EmcDojo')
+  end
+
+  def handle?(username)
+    !client.user(username).nil?
   end
 end
